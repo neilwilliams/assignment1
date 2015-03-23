@@ -22,7 +22,8 @@ In order to accomplish this assignment, you will need to learn about the followi
   * Fork the assignment repo, and make your changes in your fork:  
      * https://github.com/thedirtydev/assignment1
      * https://help.github.com/articles/fork-a-repo/ 
-  * When your happy with your changes, submit a pull request to the assignment1 repository.
+  * When your happy with your changes, submit a pull request to the assignment1 repository:
+    * https://help.github.com/articles/creating-a-pull-request/
 * Parse.com (Adding, updatinng and deleting objects)  
   * https://parse.com/docs/js_guide#objects-saving
   * https://parse.com/docs/js_guide#objects-updating
