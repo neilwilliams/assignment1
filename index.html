@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <!-- saved from url=(0049)file:///C:/Users/Craig/Downloads/index%20(1).html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
 
-    <title>My Parse App</title>
-    <meta name="description" content="My Parse App">
+    <title>Assignment 1</title>
+    <meta name="description" content="Assignment 1">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/styles.css">
@@ -14,32 +16,11 @@
     <script type="text/javascript">    
       // waits foer the document to load, then starts the js code
       $(document).ready(function(){              
-        // initialise parse, with the keys for the 'Mal' app created on parse.com
-        Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");
-    
-        // setup an object to match the objects (tables) in Parse.com
-        var Todo = Parse.Object.extend("Todo");
-    
-        // create a new query object to fetch all todo records
-        // https://www.parse.com/docs/js_guide#queries-basic    
+        Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");    
+        var Todo = Parse.Object.extend("Todo");    
         var query = new Parse.Query(Todo);
         query.find({
-          success: function(results) {
-            // our request was made successfully
-            // Do something with the returned objects (records)
-        
-            // TODO: PROJECT1: You need to do something here to print out the records returned
-            // I want them displayed inside a html table
-            // remember, you can precreate any html you need in the html code below this javascript, then add extra html to particular elements via javascript. Ooooof! Good luck :)
-        
-            // loop through our returned records and do something
-            // you have a todo object, read up on the link to the doc above, to find out how to extract the information from this object
-            // the object contains three fields:
-            // title (string)
-            // description (string)
-            // completed (boolean)
-            
-            
+          success: function(results) {                        
             // html elements
             var table, row, column;
             // strings
@@ -55,7 +36,7 @@
               title = object.get("title");
               description = object.get("description");
               completed = object.get("completed");
-              // completedString = (completed ? "Completed" : "Not Completed");
+              
               if (completed){
                 completedString = "Completed";
               } else {
