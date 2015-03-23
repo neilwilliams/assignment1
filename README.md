@@ -1,5 +1,5 @@
 # Assignment 1
-### Brief
+### What you will learn
 This assignment will teach you the following:
   * Use simple git commands to pull down, commit changes, and push up.
   * Further enhance your javascript knowledge, by manipulating form controls, and other html element.
@@ -15,15 +15,16 @@ This assignment will teach you the following:
   * Allow a user to delete an existing todo item
   * Allow a user to 'complete' a todo item (Hint: using a checkbox)
 
+### Resources
 In order to accomplish this assignment, you will need to learn about the following:  
 * GIT / GitHub
-  * Set up git: ([[https://help.github.com/articles/set-up-git/#platform-windows]])
+  * Set up git: (https://help.github.com/articles/set-up-git/#platform-windows)
   * Fork the assignment repo, and make your changes in your fork:  
-     * [[https://github.com/thedirtydev/assignment1]]
+     * https://github.com/thedirtydev/assignment1
      * https://help.github.com/articles/fork-a-repo/ 
   * When your happy with your changes, submit a pull request to the assignment1 repository.
 * Parse.com (Adding, updatinng and deleting objects)  
-  * [[https://parse.com/docs/js_guide#objects-saving]]
-  * [[https://parse.com/docs/js_guide#objects-updating]]
-  * [[https://parse.com/docs/js_guide#objects-deleting]]
-* JQuery: [[http://api.jquery.com/]]
+  * https://parse.com/docs/js_guide#objects-saving
+  * https://parse.com/docs/js_guide#objects-updating
+  * https://parse.com/docs/js_guide#objects-deleting
+* JQuery: http://api.jquery.com/
