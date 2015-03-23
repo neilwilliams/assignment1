@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)file:///C:/Users/Craig/Downloads/index%20(1).html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+
+    <title>My Parse App</title>
+    <meta name="description" content="My Parse App">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/parse-1.3.5.min.js"></script>
+    
+    <script type="text/javascript">    
+      // waits foer the document to load, then starts the js code
+      $(document).ready(function(){              
+        // initialise parse, with the keys for the 'Mal' app created on parse.com
+        Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");
+    
+        // setup an object to match the objects (tables) in Parse.com
+        var Todo = Parse.Object.extend("Todo");
+    
+        // create a new query object to fetch all todo records
+        // https://www.parse.com/docs/js_guide#queries-basic    
+        var query = new Parse.Query(Todo);
+        query.find({
+          success: function(results) {
+            // our request was made successfully
+            // Do something with the returned objects (records)
+        
+            // TODO: PROJECT1: You need to do something here to print out the records returned
+            // I want them displayed inside a html table
+            // remember, you can precreate any html you need in the html code below this javascript, then add extra html to particular elements via javascript. Ooooof! Good luck :)
+        
+            // loop through our returned records and do something
+            // you have a todo object, read up on the link to the doc above, to find out how to extract the information from this object
+            // the object contains three fields:
+            // title (string)
+            // description (string)
+            // completed (boolean)
+            
+            
+            // html elements
+            var table, row, column;
+            // strings
+            var title, description, completedString;
+            // boolean
+            var completed;
+            
+            table = $("#main .todos");
+            progress = $("#main .progress");          
+            
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+              title = object.get("title");
+              description = object.get("description");
+              completed = object.get("completed");
+              // completedString = (completed ? "Completed" : "Not Completed");
+              if (completed){
+                completedString = "Completed";
+              } else {
+                completedString = "Not Completed";
+              }
+              
+              row = $("<tr>");
+              // title
+              column = $("<td>");
+              column.html(title);
+              row.append(column);
+              
+              // description
+              column = $("<td>");
+              column.html(description);
+              row.append(column);
+              
+              column = $("<td>");
+              column.html(completedString);
+              row.append(column);
+              
+              table.append(row);
+            }
+            
+            // hide progress
+            progress.hide();
+            
+            // show table, but animate it into view, like a boss!
+            table.fadeIn(1500);
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+            // hide progress
+            progress.hide();
+          }
+        });
+      });
+    </script>
+  </head>
+
+  <body>  
+    <div id="main">
+      <h1>Mal's Learning - Project 1</h1>
+	  
+      <div class="progress">
+        <p>Loading... Please be patient!</p>
+      </div>
+    
+  	  <table class="todos">
+    		<tr class="header">
+    			<th>Title</th>
+    			<th>Description</th>
+    			<th>Completed?</th>
+    		</tr>
+  		</table>
+      
+      <p><sub>Created by Neil Williams on 16th March 2015</sub></p>
+      <p><sub>#html #javascript #jquery #parse</sub></p>
+    </div>
+  </body>
+</html>
