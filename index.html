@@ -17,39 +17,62 @@
     	// waits for the document to load, then starts the js code
       $(document).ready(function(){              
         Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");    
-        refreshTable();
+        refreshTable();        
+        $("#saveButton").on("click", editItem);
+		$("#deletebutton").on("click", deleteItem);
       });
     	
-    	function addItem() {
-      	var Todo = Parse.Object.extend("Todo");
-      	var saveItem = new Todo();
-    	
-    		var x = $("#titleNew").val();
-    		$("#newItem1").html(x);
-    		saveItem.set("title", x);
-    		var y = $("#descriptionNew").val();
-    		$("#newItem2").html(y);
-    		saveItem.set("description", y);
-    		/* var z = $("#completedNew").val();
-    		// $("#newItem3").html(z);
-    		// saveItem.set("completed", z);*/
-    				
-    		saveItem.save(null, {
-    			success: function(saveItem) {
-    				alert("New Item Added");
-    				refreshTable();
-    			},
-    			
-    			error: function(saveItem, error) {
-    				alert("Item not added");
-    			}
-    		})
-    	}
+	  
+	  function deleteItem() {
+		  var Todo = Parse.Object.extend("Todo");
+		  var delItem = new Todo();
+		  var objectId = $(this).data("objectId");
+		  delItem.set("objectId", objectId);
+		  
+		  delItem.destroy(null,{
+			  success: function(delItem) {
+				  alert("Item Deleted");
+			  },
+			  
+			  error: function(delItem, error) {
+				  alert("Item not deleted");
+			  }	  
+		  })
+	  }
+	   
+	  function editItem() {          
+		  var Todo = Parse.Object.extend("Todo");
+		  var saveItem = new Todo();
+		  var objectId = $(this).data("objectId");
+		  saveItem.set("objectId", objectId);
+		  // need to insert a loop to ensure it works for just adding a new item
+		  var x = $("#titleNew").val();
+		  saveItem.set("title", x);
+		  var y = $("#descriptionNew").val();
+		  saveItem.set("description", y);
+		  /* var z = $("#completedNew").val();
+		  // saveItem.set("completed", z);*/
+		  
+		  saveItem.save(null, {
+			  success: function(saveItem) {
+          refreshTable();          
+				  alert("Item Successfully edited");
+			  },
+			  
+			  error: function(saveItem, error) {
+				  alert("Item not edited");
+				  
+			  }
+		  })
+	  }
+		
     
     	function refreshTable() {
-    		$("table").empty();
+    		$("#table").empty();
+			$("#form").empty();
     		var Todo = Parse.Object.extend("Todo");
     		var query = new Parse.Query(Todo);
+        query.ascending("createdAt");
         query.find({
           success: function(results) {                        
             // html elements
@@ -80,15 +103,51 @@
     	  
           	  // edit button
           	  column = $("<td>");
-          	  var btn = document.createElement("button");
-          	  var t = document.createTextNode("Edit Item");
-          	  btn.appendChild(t);
-          	  row.append(document.body.appendChild(btn));
-          	  
-          	  // objectId
+          	  var btn = $("<button>");
+			  btn.html("Edit");
+			  btn.data("objectId", object.id);
+			  btn.data("title", title);
+			  btn.data("description", description);
+			  btn.data("completed", completed);
+			  btn.on("click",function(){
+				  var thisbutton = $(this); //this button is for the window yet still works!?!
+				  var objectId = thisbutton.data("objectId");
+				  var title = thisbutton.data("title");
+				  var description = thisbutton.data("description");
+				  var completed = thisbutton.data("completed");
+				  
+				  $("#completedNew").focus();
+				  $("#titleNew").val(title);
+				  $("#descriptionNew").val(description);
+				  $("#completedNew").val(completed);
+				  $("#saveButton").data("objectId", objectId);
+				  
+				  	  
+			  });
+			  column.append(btn);
+			  row.append(column);
+			  
+			  // delete button
           	  column = $("<td>");
-              column.html(object.id);
-              row.append(column);
+          	  var btnDel = $("<button>");
+			  btnDel.html("Delete");
+			  btnDel.data("objectId", object.id);
+			  btnDel.data("title", title);
+			  btnDel.data("description", description);
+			  btnDel.data("completed", completed);
+			  btnDel.on("click",function(){
+				  var thisbutton = $(this); //this buttin is for the window not!
+				  var objectId = thisbutton.data("objectId");
+				  var title = thisbutton.data("title");
+				  var description = thisbutton.data("description");
+				  var completed = thisbutton.data("completed");
+				  
+				  $("#deleteButton").data("objectId", objectId);
+				  
+			 });
+			 column.append(btnDel);
+			 row.append(column);  
+			  
           
               // title
               column = $("<td>");
@@ -135,26 +194,21 @@
   	  <table class="todos">
     		<tr class="header">
 			
-				<th>Object ID</th>
+				<th> </th>
+				<th> </th>
     			<th>Title</th>
     			<th>Description</th>
     			<th>Completed?</th>
 				
     		</tr>
   		</table>
-  		
+  		<form>
   		Title: <input type="text" id="titleNew" value=""><br>
     	Description: <input type="text" id="descriptionNew" value=""><br>
-    	Completed: <input type="text" id="completedNew" value=""><br>
-    
-      <p>Click the button to display the values of the value attribute of the text fields.</p>
-      
-      <button onclick="addItem()">Add Item</button>
-      
-      <p id="newItem1"></p>
-      <p id="newItem2"></p>
-      <p id="newItem3"></p>
-      
+    	Completed: <input type="text" id="completedNew" value=""><br>      
+	    <button id="saveButton">Save</button>
+		<button id="deleteButton">Delete</button>
+	    </form>
       <p><sub>Created by Neil Williams on 16th March 2015</sub></p>
       <p><sub>#html #javascript #jquery #parse</sub></p>
     </div>
