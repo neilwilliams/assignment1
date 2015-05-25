@@ -19,7 +19,7 @@
         Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");    
         refreshTable();        
         $("#saveButton").on("click", editItem);
-		$("#deletebutton").on("click", deleteItem);
+		$("#deleteButton").on("click", deleteItem);
       });
     	
 	  
@@ -29,13 +29,14 @@
 		  var objectId = $(this).data("objectId");
 		  delItem.set("objectId", objectId);
 		  
-		  delItem.destroy(null,{
+		  delItem.destroy({
 			  success: function(delItem) {
 				  alert("Item Deleted");
 			  },
 			  
 			  error: function(delItem, error) {
 				  alert("Item not deleted");
+				  refreshTable();
 			  }	  
 		  })
 	  }
@@ -45,7 +46,7 @@
 		  var saveItem = new Todo();
 		  var objectId = $(this).data("objectId");
 		  saveItem.set("objectId", objectId);
-		  // need to insert a loop to ensure it works for just adding a new item
+		  
 		  var x = $("#titleNew").val();
 		  saveItem.set("title", x);
 		  var y = $("#descriptionNew").val();
@@ -54,14 +55,13 @@
 		  // saveItem.set("completed", z);*/
 		  
 		  saveItem.save(null, {
-			  success: function(saveItem) {
-          refreshTable();          
+			  success: function(saveItem) {        
 				  alert("Item Successfully edited");
 			  },
 			  
 			  error: function(saveItem, error) {
 				  alert("Item not edited");
-				  
+				  refreshTable();
 			  }
 		  })
 	  }
@@ -110,7 +110,7 @@
 			  btn.data("description", description);
 			  btn.data("completed", completed);
 			  btn.on("click",function(){
-				  var thisbutton = $(this); //this button is for the window yet still works!?!
+				  var thisbutton = $(this);
 				  var objectId = thisbutton.data("objectId");
 				  var title = thisbutton.data("title");
 				  var description = thisbutton.data("description");
@@ -136,12 +136,16 @@
 			  btnDel.data("description", description);
 			  btnDel.data("completed", completed);
 			  btnDel.on("click",function(){
-				  var thisbutton = $(this); //this buttin is for the window not!
-				  var objectId = thisbutton.data("objectId");
-				  var title = thisbutton.data("title");
-				  var description = thisbutton.data("description");
-				  var completed = thisbutton.data("completed");
+				  var thisbuttonDel = $(this); 
+				  var objectId = thisbuttonDel.data("objectId");
+				  var title = thisbuttonDel.data("title");
+				  var description = thisbuttonDel.data("description");
+				  var completed = thisbuttonDel.data("completed");
 				  
+				  $("#completedNew").focus();
+				  $("#titleNew").val(title);
+				  $("#descriptionNew").val(description);
+				  $("#completedNew").val(completed);
 				  $("#deleteButton").data("objectId", objectId);
 				  
 			 });
