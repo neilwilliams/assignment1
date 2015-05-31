@@ -30,7 +30,6 @@
 		  
   		  delItem.destroy({
   			  success: function(delItem) {
-  				  // fresh the table before giving alert
 				  refreshTable();             
   				  alert("Item Deleted");         
   			  },
@@ -167,6 +166,11 @@
               column = $("<td>");
               column.html(completedString);
               row.append(column);
+			  
+			  // checkbox
+			  column = $("<td>");
+			  column.html(checkBox);
+			  row.append(column);
               
               table.append(row);
             }
@@ -204,13 +208,15 @@
     			<th>Title</th>
     			<th>Description</th>
     			<th>Completed?</th>
+				<th>CheckBox<th>
 				
     		</tr>
   		</table>
   		<form id="form">
     		Title: <input type="text" id="titleNew" value=""><br>
       	Description: <input type="text" id="descriptionNew" value=""><br>
-      	Completed: <input type="text" id="completedNew" value=""><br>      
+      	Completed: <input type="text" id="completedNew" value=""><br> 
+		Checkbox: <input type="checkbox" id="checkBox" value=""><br>     
   	    <button id="saveButton" type="button">Save</button>
   		  <button id="deleteButton" type="button">Delete</button>
 	    </form>
