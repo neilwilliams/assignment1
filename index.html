@@ -16,7 +16,7 @@
     <script type="text/javascript">    
     	// waits for the document to load, then starts the js code
       $(document).ready(function(){              
-        Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");    
+        Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");    			
         refreshTable();        
         $("#saveButton").on("click", editItem);
     		$("#deleteButton").on("click", deleteItem);
@@ -30,7 +30,8 @@
 		  
   		  delItem.destroy({
   			  success: function(delItem) {
-  				  refreshTable();             
+  				  // fresh the table before giving alert
+				  refreshTable();             
   				  alert("Item Deleted");         
   			  },
 			  
