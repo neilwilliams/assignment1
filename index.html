@@ -22,7 +22,28 @@
     		$("#deleteButton").on("click", deleteItem);
       });
     	
-  	  function deleteItem() {
+  	  function checkBox() {
+        var Todo = Parse.Object.extend("Todo");
+        var checkItem = new Todo();
+        var objectId = $(this).data("objectId");
+        checkItem.set("objectId", objectId);
+        
+  		  checkItem.save(null, {
+  			  success: function(checkItem) {        
+  				  checkItem.set("completed", true);
+            checkItem.save();
+            refreshTable();             
+  				  alert("Item Completed");          
+  			  },
+			  
+  			  error: function(checkItem, error) {
+  				  alert("Item not completed");
+  			  }
+  		  })
+  	  }
+      
+      
+      function deleteItem() {
   		  var Todo = Parse.Object.extend("Todo");
   		  var delItem = new Todo();
   		  var objectId = $(this).data("objectId");
@@ -158,8 +179,13 @@
 			  
       			  // checkbox
       			  column = $("<td>");
-              checkbox = $("<input type='checkbox'>");
-      			  column.append(checkbox);
+              var check = $("<input type='checkbox' id='checked'>");
+              check.data("objectId", object.id);
+              check.data("title", title);
+              check.data("description", description);
+              check.data("completed", completed);
+      			  check.on("click",checkBox);
+              column.append(check);
       			  row.append(column);
               
               tableBody.append(row);
