@@ -67,7 +67,6 @@
 		
     
     	function refreshTable() {
-    		$("#table").empty();
         $("#form")[0].reset();
         
     		var Todo = Parse.Object.extend("Todo");
@@ -76,7 +75,7 @@
         query.find({
           success: function(results) {                        
             // html elements
-            var table, row, column;
+            var table, tableBody, row, column, checkbox;
     	
             // strings
             var title, description, completedString;
@@ -84,6 +83,9 @@
             var completed;
             
             table = $("#main .todos");
+            tableBody = $("tbody", table);
+            tableBody.empty();
+            
             progress = $("#main .progress");          
             
             for (var i = 0; i < results.length; i++) {
@@ -135,20 +137,7 @@
               btnDel.data("title", title);
               btnDel.data("description", description);
               btnDel.data("completed", completed);
-              btnDel.on("click",function(){
-                var thisbuttonDel = $(this); 
-                var objectId = thisbuttonDel.data("objectId");
-                var title = thisbuttonDel.data("title");
-                var description = thisbuttonDel.data("description");
-                var completed = thisbuttonDel.data("completed");
-
-                $("#completedNew").focus();
-                $("#titleNew").val(title);
-                $("#descriptionNew").val(description);
-                $("#completedNew").val(completed);
-                $("#deleteButton").data("objectId", objectId);
-
-              });
+              btnDel.on("click", deleteItem);
               column.append(btnDel);
               row.append(column);  
 			  
@@ -167,12 +156,13 @@
               column.html(completedString);
               row.append(column);
 			  
-			  // checkbox
-			  column = $("<td>");
-			  column.html(checkBox);
-			  row.append(column);
+      			  // checkbox
+      			  column = $("<td>");
+              checkbox = $("<input type='checkbox'>");
+      			  column.append(checkbox);
+      			  row.append(column);
               
-              table.append(row);
+              tableBody.append(row);
             }
     					    
             // hide progress
@@ -201,24 +191,24 @@
       </div>
     
   	  <table class="todos">
-    		<tr class="header">
-			
-				<th> </th>
-				<th> </th>
-    			<th>Title</th>
-    			<th>Description</th>
-    			<th>Completed?</th>
-				<th>CheckBox<th>
-				
-    		</tr>
+        <thead>
+      		<tr class="header">
+    				<th> </th>
+    				<th> </th>
+      			<th>Title</th>
+      			<th>Description</th>
+      			<th>Completed?</th>
+    				<th>CheckBox<th>				
+      		</tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
   		</table>
   		<form id="form">
     		Title: <input type="text" id="titleNew" value=""><br>
-      	Description: <input type="text" id="descriptionNew" value=""><br>
-      	Completed: <input type="text" id="completedNew" value=""><br> 
-		Checkbox: <input type="checkbox" id="checkBox" value=""><br>     
+      	Description: <input type="text" id="descriptionNew" value=""><br>   
   	    <button id="saveButton" type="button">Save</button>
-  		  <button id="deleteButton" type="button">Delete</button>
 	    </form>
       <p><sub>Created by Craig Davies</sub></p>
       <p><sub>#html #javascript #jquery #parse</sub></p>
