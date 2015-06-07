@@ -12,27 +12,106 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <script type="text/javascript" src="assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="assets/js/parse-1.3.5.min.js"></script>
-    
+
     <script type="text/javascript">    
-      // waits foer the document to load, then starts the js code
+    	// waits for the document to load, then starts the js code
       $(document).ready(function(){              
-        Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");    
-        var Todo = Parse.Object.extend("Todo");    
-        var query = new Parse.Query(Todo);
+        Parse.initialize("nVVTfcLwuU5OgI6zB1E72KQGvwKJex8XRzvNZWJ0", "exGizwFvu9fQkU2tYQaOSQvhpW9ck6imTQQtC6go");    			
+        refreshTable();        
+        $("#saveButton").on("click", editItem);
+    		$("#deleteButton").on("click", deleteItem);
+      });
+    	
+  	  function checkBox() {
+        var Todo = Parse.Object.extend("Todo");
+        var checkItem = new Todo();
+        var objectId = $(this).data("objectId");
+        checkItem.set("objectId", objectId);
+        
+  		  checkItem.save(null, {
+  			  success: function(checkItem) {        
+  				  checkItem.set("completed", true);
+            checkItem.save();
+            refreshTable();             
+  				  alert("Item Completed");          
+  			  },
+			  
+  			  error: function(checkItem, error) {
+  				  alert("Item not completed");
+  			  }
+  		  })
+  	  }
+      
+      
+      function deleteItem() {
+  		  var Todo = Parse.Object.extend("Todo");
+  		  var delItem = new Todo();
+  		  var objectId = $(this).data("objectId");
+  		  delItem.set("objectId", objectId);
+		  
+  		  delItem.destroy({
+  			  success: function(delItem) {
+				  refreshTable();             
+  				  alert("Item Deleted");         
+  			  },
+			  
+  			  error: function(delItem, error) {            
+  				  alert("Item not deleted");
+  			  }
+  		  })
+  	  }
+	   
+  	  function editItem() {          
+  		  var Todo = Parse.Object.extend("Todo");
+  		  var saveItem = new Todo();
+  		  var objectId = $(this).data("objectId");
+  		  saveItem.set("objectId", objectId);
+		  
+  		  var x = $("#titleNew").val();
+  		  saveItem.set("title", x);
+  		  var y = $("#descriptionNew").val();
+  		  saveItem.set("description", y);
+  		  /* var z = $("#completedNew").val();
+  		  // saveItem.set("completed", z);*/
+		  
+  		  saveItem.save(null, {
+  			  success: function(saveItem) {        
+  				  refreshTable();             
+  				  alert("Item Successfully edited");          
+  			  },
+			  
+  			  error: function(saveItem, error) {
+  				  alert("Item not edited");
+  			  }
+  		  })
+  	  }
+		
+    
+    	function refreshTable() {
+        $("#form")[0].reset();
+        
+    		var Todo = Parse.Object.extend("Todo");
+    		var query = new Parse.Query(Todo);
+        query.ascending("createdAt");
         query.find({
           success: function(results) {                        
             // html elements
-            var table, row, column;
+            var table, tableBody, row, column, checkbox;
+    	
             // strings
             var title, description, completedString;
             // boolean
             var completed;
             
             table = $("#main .todos");
+            tableBody = $("tbody", table);
+            tableBody.empty();
+            
             progress = $("#main .progress");          
             
             for (var i = 0; i < results.length; i++) {
               var object = results[i];
+    	        objectId = object.id;
               title = object.get("title");
               description = object.get("description");
               completed = object.get("completed");
@@ -42,8 +121,48 @@
               } else {
                 completedString = "Not Completed";
               }
-              
+    	  
               row = $("<tr>");
+    	  
+          	  // edit button
+          	  column = $("<td>");
+          	  var btn = $("<button>");
+      			  btn.html("Edit");
+      			  btn.data("objectId", object.id);
+      			  btn.data("title", title);
+      			  btn.data("description", description);
+      			  btn.data("completed", completed);
+      			  btn.on("click",function(){
+                
+        				var thisbutton = $(this);
+                var objectId = thisbutton.data("objectId");
+                var title = thisbutton.data("title");
+                var description = thisbutton.data("description");
+                var completed = thisbutton.data("completed");
+
+                $("#completedNew").focus();
+                $("#titleNew").val(title);
+                $("#descriptionNew").val(description);
+                $("#completedNew").val(completed);
+                $("#saveButton").data("objectId", objectId);
+                
+              });
+              column.append(btn);
+              row.append(column);
+
+              // delete button
+              column = $("<td>");
+              var btnDel = $("<button>");
+              btnDel.html("Delete");
+              btnDel.data("objectId", object.id);
+              btnDel.data("title", title);
+              btnDel.data("description", description);
+              btnDel.data("completed", completed);
+              btnDel.on("click", deleteItem);
+              column.append(btnDel);
+              row.append(column);  
+			  
+          
               // title
               column = $("<td>");
               column.html(title);
@@ -57,10 +176,21 @@
               column = $("<td>");
               column.html(completedString);
               row.append(column);
+			  
+      			  // checkbox
+      			  column = $("<td>");
+              var check = $("<input type='checkbox' id='checked'>");
+              check.data("objectId", object.id);
+              check.data("title", title);
+              check.data("description", description);
+              check.data("completed", completed);
+      			  check.on("click",checkBox);
+              column.append(check);
+      			  row.append(column);
               
-              table.append(row);
+              tableBody.append(row);
             }
-            
+    					    
             // hide progress
             progress.hide();
             
@@ -73,7 +203,8 @@
             progress.hide();
           }
         });
-      });
+    	}
+    	
     </script>
   </head>
 
@@ -86,14 +217,26 @@
       </div>
     
   	  <table class="todos">
-    		<tr class="header">
-    			<th>Title</th>
-    			<th>Description</th>
-    			<th>Completed?</th>
-    		</tr>
+        <thead>
+      		<tr class="header">
+    				<th> </th>
+    				<th> </th>
+      			<th>Title</th>
+      			<th>Description</th>
+      			<th>Completed?</th>
+    				<th>CheckBox<th>				
+      		</tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
   		</table>
-      
-      <p><sub>Created by Neil Williams on 16th March 2015</sub></p>
+  		<form id="form">
+    		Title: <input type="text" id="titleNew" value=""><br>
+      	Description: <input type="text" id="descriptionNew" value=""><br>   
+  	    <button id="saveButton" type="button">Save</button>
+	    </form>
+      <p><sub>Created by Craig Davies</sub></p>
       <p><sub>#html #javascript #jquery #parse</sub></p>
     </div>
   </body>
